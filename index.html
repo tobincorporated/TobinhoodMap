@@ -5,6 +5,12 @@
     <title>Cat Clicker</title>
 </head>
 <body>
+    <form data-bind="submit: doSomething">
+        <label for="street">Street: </label><input type="text" id="street" value="">
+        <label for="city">City: </label><input type="text" id="city" value="">
+        <button id="submit-btn">Submit</button>
+    </form>
+
     <ul data-bind="foreach: catList">
         <li data-bind="text: name, click: $parent.setCurrentCat"></li>
     </ul>
@@ -16,6 +22,7 @@
              src="" alt="cute cat">
 
     </div>
+    <script src="js/libs/jquery.min.js"></script>
     <script src="js/libs/knockout-3.2.0.js"></script>
     <script src="js/script.js"></script>
 </body>
