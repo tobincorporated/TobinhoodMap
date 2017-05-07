@@ -3,75 +3,80 @@
     <head>
         <meta charset="UTF-8">
         <title>Cat Clicker</title>
+        <link rel="stylesheet" href="css/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/ico" href="img/favicon.ico">
     </head>
     <body>
-        <form data-bind="submit: doSomething">
-            <label for="street">Street: </label>
-            <input type="text" id="street" value="">
-            <label for="city">City: </label>
-            <input type="text" id="city" value="">
-            <button id="submit-btn">Submit</button>
-        </form>
 
-        <ul data-bind="foreach: catList">
-            <li data-bind="text: name, click: $parent.setCurrentCat"></li>
-        </ul>
-        <div data-bind="with: currentCat">
+        <div class="container">
+            <div class="options-box">
+                <h1>Find Your New NYC Home</h1>
+                <div>
+                    <input id="show-listings" type="button" value="Show Listings">
+                    <input id="hide-listings" type="button" value="Hide Listings">
+                </div>
+                <form data-bind="submit: doSomething">
+                    <label for="street">Street: </label>
+                    <input type="text" id="street" value="">
+                    <button id="submit-btn">Filter</button>
+                </form>
 
-            <h2 data-bind="text: name"></h2>
-            <div data-bind="text: clickCount"></div>
-            <img data-bind="click: $parent.incrementCount, attr: {src: imgSrc}"
-                 src="" alt="cute cat">
+                <ul data-bind="foreach: locList">
+                    <li data-bind="text: name, click: $parent.setCurrentLoc"></li>
+                </ul>
+                <div data-bind="with: currentLoc">
+
+                    <h2 data-bind="text: name"></h2>
+                    <div data-bind="text: clickCount"></div>
+                    <img data-bind="click: $parent.incrementCount, attr: {src: imgSrc}"
+                         src="" alt="cute loc">
+                </div>
+                <div id="map"></div>
+            </div>
+
+
 
         </div>
         <script src="js/libs/jquery.min.js"></script>
         <script src="js/libs/knockout-3.2.0.js"></script>
         <script src="js/script.js"></script>
+        <script async defer
+                src=
+                "https://maps.googleapis.com/maps/api/js?key=AIzaSyAbPKbSDj8SglAgtx7GaGLJNIkAoXDhgCM&v=3&callback=initMap">
+        </script>
     </body>
 </html>
 
+<!-- <!DOCTYPE html>
+  <body>
+    
 
+
+-->
+
+<!-- API KEY GMAP AIzaSyAbPKbSDj8SglAgtx7GaGLJNIkAoXDhgCM  -->
+
+
+
+<!--API Weather: 
+Key	
+15cc9da0b27b48d6b6fa81f700733c89-->
 
 <!--
-<!DOCTYPE html>
-<html>
-  <head>
-    <style>
-      html,
-      body {
-        font-family: Arial, sans-serif;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #map {
-        height: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map"></div>
-    <script>
-      var map;
-      function initMap() {
-        // Constructor creates a new map - only center and zoom are required.
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 40.7413549, lng: -73.9980244},
-          zoom: 13
-        });
-        var tribeca = {lat: 40.719526, lng: -74.0089934};
-        var marker = new google.maps.Marker({
-          position: tribeca,
-          map: map,
-          title: 'First Marker!'
-        });
-      }
-    </script>
+api.openweathermap.org/data/2.5/weather?zip=91107,us&appid=15cc9da0b27b48d6b6fa81f700733c89
+-->
+<!--
 
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=MYAPIKEY&v=3&callback=initMap">
-    </script>
-
-  </body>
-</html>
+ {"coord":{"lon":-122.09,"lat":37.39},
+"sys":{"type":3,"id":168940,"message":0.0297,"country":"US","sunrise":1427723751,"sunset":1427768967},
+"weather":[{"id":800,"main":"Clear","description":"Sky is Clear","icon":"01n"}],
+"base":"stations",
+"main":{"temp":285.68,"humidity":74,"pressure":1016.8,"temp_min":284.82,"temp_max":286.48},
+"wind":{"speed":0.96,"deg":285.001},
+"clouds":{"all":0},
+"dt":1427700245,
+"id":0,
+"name":"Mountain View",
+"cod":200}
 -->
