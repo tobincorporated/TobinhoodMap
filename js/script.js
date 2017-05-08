@@ -186,9 +186,8 @@ function AJAXInfoWindow(marker) {
             console.log(description);
             // var status = data.response.venue.hours.status;
             // console.log(status);
-            windowTitle =  venue;
-            windowText = description;
-            populateLargeInfoWindow(marker);
+            windowText = '<h1>' + venue + '</h1>';
+            windowText +='<p>' + description + '</p>';
 
         },
 
@@ -197,8 +196,10 @@ function AJAXInfoWindow(marker) {
             console.log('getJSON request failed! ' + textStatus);
             infowindow.setContent(windowText);
             infowindow.open(map, marker);
+        },
+  complete: function (jqXHR, status) {
             populateLargeInfoWindow(marker);
-        }
+  }
     });
 }
 
