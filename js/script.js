@@ -61,6 +61,7 @@ var ViewModel = function () {
 
     this.setCurrentLoc = function (clickedLoc) {
         self.currentLoc(clickedLoc);
+        populateInfoWindowByIndex(clickedLoc.markerID());
     };
     
     this.highlightLoc = function (selectedLoc) {
@@ -123,7 +124,6 @@ function initMap() {
         markers.push(marker);
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function () {
-            smallInfowindow.close();
             populateLargeInfoWindow(this);
         });
 
@@ -138,9 +138,61 @@ function initMap() {
 // This function populates the infowindow when the marker is clicked. We'll only allow
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
+function populateInfoWindowByIndex(index){
+    console.log("index: " +index);
+    console.log(markers[index]);
+    populateLargeInfoWindow(markers[index]);
+}
 function populateLargeInfoWindow(marker) {
     // Check to make sure the infowindow is not already opened on this marker.
+    smallInfowindow.close();
     marker.setAnimation(google.maps.Animation.BOUNCE);
+    //AJAX Call
+    
+    
+    var markerID = marker.id;
+    console.log("markerID: " + markerID);
+    var currentlocation = locations[markerID];
+    console.log("currentlocation: "+ currentlocation);
+    var fsVenue = currentlocation.fsVenue;
+    console.log("fsVenue: " + fsVenue);
+    var fsPre = 'https://api.foursquare.com/v2/venues/';
+    // var fsVenue = '4d51e88d7ee1a35d31af9434';
+    var fsID = '?client_id=F15PVAJ44Q5ASG1J2INQDCET4TX5HIDUXHFXV3DGVWXBEFBE';
+    var fsSecret = '&client_secret=XX2K40GOPRYEORWWYGAPW2END33ZDJCVN1GBLCH5W4MA3JP5';
+    var fsVer = '&v=20170309';
+    var foursquareUrl = fsPre + fsVenue + fsID + fsSecret + fsVer;
+    $.ajax({
+
+        url: foursquareUrl,
+        dataType: 'json',
+        data: {
+
+            async: true
+        },
+
+        success: function (data) {
+            var venue = data.response.venue.name;
+            console.log(venue);
+            var formattedPhone = data.response.venue.contact.formattedPhone;
+            console.log(formattedPhone);
+            var description = data.response.venue.description;
+            console.log(description);
+            // var status = data.response.venue.hours.status;
+            // console.log(status);
+
+        },
+
+        error: function (jqXHR, textStatus, errorThrown) {
+            var infoContent = '<h3>Oops! Something seems to be wrong. Please try later.';
+            console.log('getJSON request failed! ' + textStatus);
+            infowindow.setContent(infoContent);
+            infowindow.open(map, marker);
+        }
+    });
+    
+    
+    
     setTimeout(function () {
         marker.setAnimation(null);
     }, 750);
