@@ -31,6 +31,8 @@ var map;
 var markers = [];
 var largeInfowindow;
 var smallInfowindow;
+var windowTitle='';
+var windowText='';
 
 var Loc = function (data) {
     this.title = ko.observable(data.title);
@@ -62,23 +64,24 @@ var ViewModel = function () {
     this.setCurrentLoc = function (clickedLoc) {
         self.currentLoc(clickedLoc);
         populateInfoWindowByIndex(clickedLoc.markerID());
+        console.log('set current loc call');
     };
     
     this.highlightLoc = function (selectedLoc) {
-        console.log("highlight");
-        console.log(selectedLoc.title());
+//        console.log("highlight");
+//        console.log(selectedLoc.title());
     };
     
     this.filterLocs = function (formElement) {
         var filterWord = $('#street').val().toLowerCase();
         var loctext = '';
         var markerIDs = [];
-        console.log('submitted');
+        console.log('Filter submitted');
         console.log(filterWord);
         self.locList.removeAll();
         locations.forEach(function (locItem) {
             loctext = (locItem.title + locItem.tags).toLowerCase();
-            console.log(loctext);
+            console.log('Filter checking: ' +octext);
             if (loctext.includes(filterWord)) {
                 self.locList.push(new Loc(locItem));
                 markerIDs.push(locItem.markerID);
@@ -124,7 +127,7 @@ function initMap() {
         markers.push(marker);
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function () {
-            populateLargeInfoWindow(this);
+            AJAXInfoWindow(this);
         });
 
         marker.addListener('mouseover', function () {
@@ -140,10 +143,10 @@ function initMap() {
 // on that markers position.
 function populateInfoWindowByIndex(index){
     console.log("index: " +index);
-    console.log(markers[index]);
-    populateLargeInfoWindow(markers[index]);
+    console.log('marker object: '+ markers[index]);
+    AJAXInfoWindow(markers[index]);
 }
-function populateLargeInfoWindow(marker) {
+function AJAXInfoWindow(marker) {
     // Check to make sure the infowindow is not already opened on this marker.
     smallInfowindow.close();
     marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -162,6 +165,7 @@ function populateLargeInfoWindow(marker) {
     var fsSecret = '&client_secret=XX2K40GOPRYEORWWYGAPW2END33ZDJCVN1GBLCH5W4MA3JP5';
     var fsVer = '&v=20170309';
     var foursquareUrl = fsPre + fsVenue + fsID + fsSecret + fsVer;
+
     $.ajax({
 
         url: foursquareUrl,
@@ -172,33 +176,47 @@ function populateLargeInfoWindow(marker) {
         },
 
         success: function (data) {
+            console.log("ajax success");
             var venue = data.response.venue.name;
             console.log(venue);
+            
             var formattedPhone = data.response.venue.contact.formattedPhone;
             console.log(formattedPhone);
             var description = data.response.venue.description;
             console.log(description);
             // var status = data.response.venue.hours.status;
             // console.log(status);
+            windowTitle =  venue;
+            windowText = description;
+            populateLargeInfoWindow(marker);
 
         },
 
         error: function (jqXHR, textStatus, errorThrown) {
-            var infoContent = '<h3>Oops! Something seems to be wrong. Please try later.';
+            windowText = 'Oops! touble connecting to FourSquare API. Please try later.';
             console.log('getJSON request failed! ' + textStatus);
-            infowindow.setContent(infoContent);
+            infowindow.setContent(windowText);
             infowindow.open(map, marker);
+            populateLargeInfoWindow(marker);
         }
     });
-    
-    
-    
+}
+
+function populateLargeInfoWindow(marker){
     setTimeout(function () {
         marker.setAnimation(null);
     }, 750);
+    
+    console.log('text type: '+ typeof windowText);
+    console.log('Window Text:' + windowText);
+    largeInfowindow.setContent(windowText);
+    
     if (largeInfowindow.marker !== marker) {
+        console.log("reset window");
         largeInfowindow.marker = marker;
-        largeInfowindow.setContent('<h2>' + marker.title + '</h2>');
+        windowText = 'hello';
+//        console.log('Window Text:' + windowText);
+//        largeInfowindow.setContent('<p>'+windowText+'</p>');
         largeInfowindow.open(map, marker);
         // Make sure the marker property is cleared if the infowindow is closed.
         largeInfowindow.addListener('closeclick', function () {
@@ -275,6 +293,7 @@ $('#show-listings').click(function () {
 
         success: function (data) {
             var venue = data.response.venue.name;
+            console.log('AJAX returns: ')
             console.log(venue);
             var formattedPhone = data.response.venue.contact.formattedPhone;
             console.log(formattedPhone);
