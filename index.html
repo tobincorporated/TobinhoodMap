@@ -4,33 +4,34 @@
         <meta charset="UTF-8">
         <title>Cat Clicker</title>
         <link rel="stylesheet" href="css/style.css">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/ico" href="img/favicon.ico">
     </head>
     <body>
 
         <div class="container">
             <div class="options-box">
-                <h1>Find Your New NYC Home</h1>
+                <h1>Visit some sweet places in East Pasadena</h1>
                 <div>
                     <input id="show-listings" type="button" value="Show Listings">
                     <input id="hide-listings" type="button" value="Hide Listings">
                 </div>
-                <form data-bind="submit: doSomething">
+                <form data-bind="submit: filterLocs">
                     <label for="street">Street: </label>
                     <input type="text" id="street" value="">
                     <button id="submit-btn">Filter</button>
                 </form>
 
                 <ul data-bind="foreach: locList">
-                    <li data-bind="text: name, click: $parent.setCurrentLoc"></li>
+                    <li data-bind="text: title, event: {click: $parent.setCurrentLoc, mouseover:$parent.highlightLoc}">
+                    </li>
                 </ul>
                 <div data-bind="with: currentLoc">
 
-                    <h2 data-bind="text: name"></h2>
-                    <div data-bind="text: clickCount"></div>
-                    <img data-bind="click: $parent.incrementCount, attr: {src: imgSrc}"
-                         src="" alt="cute loc">
+                    <h2 data-bind="text: title"></h2>
+                    <div data-bind="text: fullName"></div>
+<!--                    <img data-bind="click: $parent.incrementCount, attr: {src: imgSrc}"
+                         src="" alt="cute loc">-->
                 </div>
                 <div id="map"></div>
             </div>
@@ -43,7 +44,8 @@
         <script src="js/script.js"></script>
         <script async defer
                 src=
-                "https://maps.googleapis.com/maps/api/js?key=AIzaSyAbPKbSDj8SglAgtx7GaGLJNIkAoXDhgCM&v=3&callback=initMap">
+                "https://maps.googleapis.com/maps/api/js?key=AIzaSyAbPKbSDj8SglAgtx7GaGLJNIkAoXDhgCM&v=3&callback=initMap"
+                >
         </script>
     </body>
 </html>

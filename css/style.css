@@ -18,6 +18,10 @@ input {
     cursor: pointer;
 }
 
+li:hover {
+    background: #ddd;
+}
+
 /* Column types */
 th.missed-col {
     background-color: #f00;
