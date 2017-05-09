@@ -35,10 +35,12 @@ var locations = [
 // Defining a Knockout Location object
 var Loc = function (data) {
     this.title = ko.observable(data.title);
-    this.position = ko.observable(data.position);
-    this.fsVenue = ko.observable(data.fsVenue);
     this.tags = ko.observable(data.tags);
     this.markerID = ko.observable(data.markerID);
+    this.filterText = ko.computed(
+            function () {
+                return this.title() + this.tags();
+            }, this);
 };
 
 
@@ -67,23 +69,37 @@ var ViewModel = function () {
         populateSmallInfoWindow(selectedMarker);
     };
 
-    // Function called when clicking 'Filter' button
-    this.filterLocs = function (formElement) {
-        var filterWord = $('#street').val().toLowerCase();
-        var loctext = '';
+
+    
+        // Function called when clicking 'Filter' button
+    this.ko2mapFilter = function () {
         var markerIDs = [];
-        self.locList.removeAll();
-        locations.forEach(function (locItem) {
-            loctext = (locItem.title + locItem.tags).toLowerCase();
-            if (loctext.includes(filterWord)) {
-                self.locList.push(new Loc(locItem));
-                markerIDs.push(locItem.markerID);
-            }
-            ;
+        self.filteredLocs().forEach(function (locItem) {
+                markerIDs.push(locItem.markerID());
         });
         filterMarkers(markerIDs);
     };
-
+    
+    
+    //KO filter
+    this.filter = ko.observable('');
+    this.filteredLocs = ko.computed(function() {
+        var filter = this.filter().toLowerCase();
+        if (!filter) {
+              return this.locList();
+          } else {
+              return ko.utils.arrayFilter(this.locList(), function (loc) {
+                  return loc.filterText().toLowerCase().indexOf(filter) !== -1;
+              });
+          };
+    }, this);
+     this.filteredLocs.subscribe(function () {
+        self.ko2mapFilter();                
+  });
+    
+    
+    
+    
 };
 
 ko.applyBindings(new ViewModel());
@@ -107,6 +123,7 @@ function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 34.144408, lng: -118.117983},
         zoom: 14,
+        maxZoom: 16,
         mapTypeControl: false
     });
 
@@ -172,7 +189,6 @@ function AJAXInfoWindow(marker) {
         error: function (jqXHR, textStatus, errorThrown) {
             windowText = 'Oops! touble connecting to FourSquare API. Please try later.';
             infowindow.setContent(windowText);
-            infowindow.open(map, marker);
         },
         
         complete: function (jqXHR, status) {
@@ -185,7 +201,7 @@ function AJAXInfoWindow(marker) {
 function populateLargeInfoWindow(marker) {
     setTimeout(function () {
         marker.setAnimation(null);
-    }, 750);
+    }, 700);
 
     largeInfowindow.setContent(windowText);
 
@@ -200,10 +216,7 @@ function populateLargeInfoWindow(marker) {
 
 // Displays mini-location window on map for help selecting locations
 function populateSmallInfoWindow(marker) {
-    marker.setAnimation(google.maps.Animation.BOUNCE);
-    setTimeout(function () {
-        marker.setAnimation(null);
-    }, 750);
+
     if (smallInfowindow.marker !== marker) {
         smallInfowindow.marker = marker;
         smallInfowindow.setContent('<p>' + marker.title + '</p>');
@@ -221,6 +234,7 @@ function filterMarkers(markerIDs) {
     }
     var bounds = new google.maps.LatLngBounds();
     for (var i = 0; i < markerIDs.length; i++) {
+        console.log('markerID: '+markerIDs[i]);
         markerID = markerIDs[i];
         markers[markerID].setMap(map);
         bounds.extend(markers[markerID].position);
@@ -238,3 +252,6 @@ function showListings() {
     map.fitBounds(bounds);
 }
 
+function mapError(){
+    $('#map').append('<h1>Sorry, there was an error loading the map</h1>');
+}

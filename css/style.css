@@ -37,6 +37,12 @@ td.missed-col {
     text-align: left;
 }
 
+h2{
+    margin-bottom: 0;
+}
+p{
+    margin-top: 0;
+}
 
 .container {
     height: 100%;

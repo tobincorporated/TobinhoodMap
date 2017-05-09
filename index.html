@@ -8,18 +8,22 @@
         <link rel="icon" type="image/ico" href="img/favicon.ico">
     </head>
     <body>
+ 
 
         <div class="container">
             <div class="locations-box">
                 <h1>Some of my personal Pasadena Haunts</h1>
 
-                <form data-bind="submit: filterLocs">
-                    <label for="street">Street: </label>
-                    <input type="text" id="street" value="">
-                    <button id="submit-btn">Filter</button>
-                </form>
+             
+                    <h2> Filter by keywords </h2>
+                    <p>
+                        <input data-bind="value: filter, valueUpdate: 'afterkeydown'" />
+                    
+                  
+                    </p>
+               
 
-                <ul data-bind="foreach: locList">
+                <ul data-bind="foreach: filteredLocs">
                     <li data-bind="text: title, event: {click: $parent.setCurrentLoc, mouseover:$parent.highlightLoc}">
                     </li>
                 </ul>
@@ -27,47 +31,15 @@
             </div>
 
 
-        </div>
+        </div>       
         <script src="js/libs/jquery.min.js"></script>
         <script src="js/libs/knockout-3.2.0.js"></script>
         <script src="js/script.js"></script>
         <script async defer
                 src=
                 "https://maps.googleapis.com/maps/api/js?key=AIzaSyAbPKbSDj8SglAgtx7GaGLJNIkAoXDhgCM&v=3&callback=initMap"
+                onerror="mapError()"
                 >
         </script>
     </body>
 </html>
-
-<!-- <!DOCTYPE html>
-  <body>
-    
-
-
--->
-
-<!-- API KEY GMAP AIzaSyAbPKbSDj8SglAgtx7GaGLJNIkAoXDhgCM  -->
-
-
-
-<!--API Weather: 
-Key	
-15cc9da0b27b48d6b6fa81f700733c89-->
-
-<!--
-api.openweathermap.org/data/2.5/weather?zip=91107,us&appid=15cc9da0b27b48d6b6fa81f700733c89
--->
-<!--
-
- {"coord":{"lon":-122.09,"lat":37.39},
-"sys":{"type":3,"id":168940,"message":0.0297,"country":"US","sunrise":1427723751,"sunset":1427768967},
-"weather":[{"id":800,"main":"Clear","description":"Sky is Clear","icon":"01n"}],
-"base":"stations",
-"main":{"temp":285.68,"humidity":74,"pressure":1016.8,"temp_min":284.82,"temp_max":286.48},
-"wind":{"speed":0.96,"deg":285.001},
-"clouds":{"all":0},
-"dt":1427700245,
-"id":0,
-"name":"Mountain View",
-"cod":200}
--->
