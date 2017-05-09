@@ -14,7 +14,6 @@ var Loc = function (data) {
             }, this);
 };
 
-
 var ViewModel = function () {
     var self = this;
     self.locList = ko.observableArray([]);
@@ -26,21 +25,26 @@ var ViewModel = function () {
     });
 
 
-
-    // Display selected location on map
+    /**
+     * @description Call populateInfoWindowbyIndex to open infoWindow 
+     * @param {ko.observable} clickedLoc - clicked Location from list
+     */
     this.setCurrentLoc = function (clickedLoc) {
         populateInfoWindowByIndex(clickedLoc.markerID());
     };
 
-    // Function called during mouseover event on location list
+    /**
+     * @description Tells map to highlight marker on the map
+     * @param {ko.observable} selectedLoc - Location highlighted in list
+     */
     this.highlightLoc = function (selectedLoc) {
         var selectedMarker = markers[selectedLoc.markerID()];
         populateSmallInfoWindow(selectedMarker);
     };
 
-
-
-    // Function called when clicking 'Filter' button
+    /**
+     * @description Filters list items
+     */
     this.ko2mapFilter = function () {
         var markerIDs = [];
         self.filteredLocs().forEach(function (locItem) {
@@ -50,8 +54,10 @@ var ViewModel = function () {
     };
 
 
-    //KO filter
+    //KO filter variable
     this.filter = ko.observable('');
+
+    // List of filtered locations as ko observable
     this.filteredLocs = ko.computed(function () {
         var filter = self.filter().toLowerCase();
         if (!filter) {
@@ -61,7 +67,6 @@ var ViewModel = function () {
                 return loc.filterText().toLowerCase().indexOf(filter) !== -1;
             });
         }
-        ;
     }, this);
     this.filteredLocs.subscribe(function () {
         self.ko2mapFilter();

@@ -1,16 +1,9 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 
 /*
  *  Google Maps API functions
  */
 
-// Variables used in the Googlle Maps API functions
+// Variables used in the Google Maps API functions
 var map;
 var markers = [];
 var largeInfowindow;
@@ -19,7 +12,9 @@ var windowTitle = '';
 var windowText = '';
 
 
-// Initialize Google Map
+/**
+* @description Initialize Google Map API
+*/
 function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), {
@@ -53,12 +48,18 @@ function initMap() {
     showListings();
 }
 
-// When option is chosen from list, calls this function
+/**
+* @description Takes marker index and makes AJAX call with associated marker
+* @param {int} index - index of marker to highlight
+*/
 function populateInfoWindowByIndex(index) {
     AJAXInfoWindow(markers[index]);
 }
 
-// Make AJAX call, then display location info on map
+/**
+* @description Makes AJAX Call, then calls populateLargeInfoWindow
+* @param {object} marker - the marker object to open
+*/
 function AJAXInfoWindow(marker) {
     smallInfowindow.close();
     marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -77,7 +78,7 @@ function AJAXInfoWindow(marker) {
         dataType: 'json',
         data: {
             async: true
-        },        
+        },
         complete: function () {
             populateLargeInfoWindow(marker);
         }
@@ -93,7 +94,10 @@ function AJAXInfoWindow(marker) {
     });
 }
 
-// Display Location info on map
+/**
+* @description Displays location information on map
+* @param {object} marker - the marker to display information for
+*/
 function populateLargeInfoWindow(marker) {
     setTimeout(function () {
         marker.setAnimation(null);
@@ -110,7 +114,10 @@ function populateLargeInfoWindow(marker) {
     }
 }
 
-// Displays mini-location window on map for help selecting locations
+/**
+* @description Displays mini location window on map
+* @param {object} marker - the marker to display information for
+*/
 function populateSmallInfoWindow(marker) {
 
     if (smallInfowindow.marker !== marker) {
@@ -123,7 +130,10 @@ function populateSmallInfoWindow(marker) {
     }
 }
 
-// Filters out markers based on Filter
+/**
+* @description Filters markers
+* @param {int[]} markerIDs - the IDs of the markers to keep
+*/
 function filterMarkers(markerIDs) {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
@@ -138,7 +148,9 @@ function filterMarkers(markerIDs) {
     map.fitBounds(bounds);
 }
 
-// Displays markers on map
+/**
+* @description Displays markers on map
+*/
 function showListings() {
     var bounds = new google.maps.LatLngBounds();
     for (var i = 0; i < markers.length; i++) {
@@ -147,7 +159,9 @@ function showListings() {
     }
     map.fitBounds(bounds);
 }
-
+/**
+* @description Displays error message where map would otherwise be
+*/
 function mapError() {
     $('#map').append('<h1>Sorry, there was an error loading the map</h1>');
 }
