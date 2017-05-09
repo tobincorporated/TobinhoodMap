@@ -1,29 +1,29 @@
 var locations = [
     {
-        title: 'Caltech',
-        position: {lat: 34.139137, lng: -118.125432},
-        fsVenue: '4af9ae79f964a5204d1322e3',
-        tags: 'school, college, education'},
+        title: 'Pizza Rev',
+        position: {lat: 34.150412, lng: -118.079213},
+        fsVenue: '53604ff1498e5c913e130565',
+        tags: 'food, pizza'},
     {
-        title: 'Comics Factory',
-        position: {lat: 34.145754, lng: -118.123625},
-        fsVenue: '4b314068f964a520400325e3',
-        tags: 'comics, games, manga'},
+        title: 'Wingstop',
+        position: {lat: 34.146219, lng: -118.115185},
+        fsVenue: '56e39518498e3a6d0749bcf8',
+        tags: 'food, chicken wings'},
     {
         title: 'Lucky Baldwin',
         position: {lat: 34.145803, lng: -118.113960},
         fsVenue: '4d51e88d7ee1a35d31af9434',
-        tags: 'bar, pub, restaurant, food'},
+        tags: 'bar, pub, restaurant, food, british'},
     {
-        title: 'PCC',
-        position: {lat: 34.145382, lng: -118.118237},
-        fsVenue: '4511eb8cf964a5209a391fe3',
-        tags: 'school, college, education'},
+        title: 'Tea Spots',
+        position: {lat: 34.146369, lng: -118.120681},
+        fsVenue: '4b4cba46f964a5201fbc26e3',
+        tags: 'food, tea'},
     {
-        title: 'Academy Theater',
-        position: {lat: 34.146130, lng: -118.129841},
-        fsVenue: '4a5eaabcf964a52006bf1fe3',
-        tags: 'movies, theatre, cinema'}
+        title: 'Sushi Stop',
+        position: {lat: 34.145703, lng: -118.149191},
+        fsVenue: '523660ca11d2994db9610366',
+        tags: 'food, sushi, japanese'}
 ];
 
 
@@ -70,6 +70,8 @@ var ViewModel = function () {
     this.highlightLoc = function (selectedLoc) {
 //        console.log("highlight");
 //        console.log(selectedLoc.title());
+          var selectedMarker = markers[selectedLoc.markerID()];
+          populateSmallInfoWindow(selectedMarker);
     };
     
     this.filterLocs = function (formElement) {
@@ -184,10 +186,11 @@ function AJAXInfoWindow(marker) {
             console.log(formattedPhone);
             var description = data.response.venue.description;
             console.log(description);
-            // var status = data.response.venue.hours.status;
-            // console.log(status);
-            windowText = '<h1>' + venue + '</h1>';
-            windowText +='<p>' + description + '</p>';
+             var status = data.response.venue.hours.status;
+             console.log(status);
+            windowText = '<h2>' + venue + '</h2>';
+            windowText +='<p>' + status + '</p>';
+            windowText +='<p>Contact: ' + formattedPhone + '</p>';
 
         },
 
