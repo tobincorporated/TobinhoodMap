@@ -20,7 +20,7 @@ var ViewModel = function () {
 
     // Marker ID helps link KO Loc object to GMaps API markers
     locations.forEach(function (locItem, index) {
-        locItem['markerID'] = index;
+        locItem.markerID = index;
         self.locList.push(new Loc(locItem));
     });
 
